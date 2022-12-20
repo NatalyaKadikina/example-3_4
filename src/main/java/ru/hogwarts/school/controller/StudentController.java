@@ -53,4 +53,10 @@ public class StudentController {
     public Faculty getFacultyByStudent(@PathVariable long id) {
         return studentService.getFacultyByStudent(id);
     }
+
+    @PostMapping("/{id}/avatar")
+    public Student patchStudentAvatar(@PathVariable long id,
+                                      @RequestParam("avatarId") long avatarId) {
+        return studentService.patchStudentAvatar(id, avatarId);
+    }
 }
