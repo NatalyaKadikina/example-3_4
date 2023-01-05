@@ -1,7 +1,9 @@
 package ru.hogwarts.school.service;
 
 import lombok.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.util.Pair;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.hogwarts.school.entities.Avatar;
@@ -12,14 +14,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 public class AvatarService {
 
     private final AvatarRepository avatarRepository;
 
-    @Value("${path.to.avatars.folder}")
+    //@Value("${path.to.avatars.folder}")
     private String folderForAvatars;
 
     public AvatarService(AvatarRepository avatarRepository) {
@@ -57,5 +61,14 @@ public class AvatarService {
     public Pair<String, byte[]> readAvatarFromFs(long id) throws IOException {
         Avatar avatar = avatarRepository.findById(id).orElseThrow(() -> new AvatarNotFoundException(id));
         return Pair.of(avatar.getMediaType(), Files.readAllBytes(Paths.get(avatar.getFilePath())));
+    }
+
+    public ResponseEntity<Collection<Avatar>> getAll(Integer pageNumber, Integer pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
+        Collection<Avatar> avatarsList = avatarRepository.findAll(pageRequest).getContent();
+        if (avatarsList.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(avatarsList);
     }
 }

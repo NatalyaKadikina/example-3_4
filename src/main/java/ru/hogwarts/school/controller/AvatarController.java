@@ -7,9 +7,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.hogwarts.school.entities.Avatar;
 import ru.hogwarts.school.service.AvatarService;
 
 import java.io.IOException;
+import java.util.Collection;
 
 @RestController
 @RequestMapping("/avatars")
@@ -42,4 +44,11 @@ public class AvatarController {
                 .contentLength(pair.getSecond().length)
                 .body(pair.getSecond());
     }
+
+    @GetMapping(value = "/all")
+    public ResponseEntity<Collection<Avatar>> getAll(@RequestParam("page") Integer pageNumber,
+                                                     @RequestParam("size") Integer pageSize) {
+        return avatarService.getAll(pageNumber, pageSize);
+    }
+
 }
