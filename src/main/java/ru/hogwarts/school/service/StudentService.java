@@ -1,12 +1,10 @@
 package ru.hogwarts.school.service;
 
 import org.springframework.stereotype.Service;
-import ru.hogwarts.school.entities.Avatar;
 import ru.hogwarts.school.entities.Faculty;
 import ru.hogwarts.school.entities.Student;
 import ru.hogwarts.school.exeption.AvatarNotFoundException;
 import ru.hogwarts.school.exeption.StudentNotFoundException;
-import ru.hogwarts.school.repository.AvatarRepository;
 import ru.hogwarts.school.repository.StudentRepository;
 
 
@@ -18,12 +16,9 @@ public class StudentService {
 
     private final StudentRepository studentRepository;
 
-    private final AvatarRepository avatarRepository;
 
-    public StudentService(StudentRepository studentRepository,
-                          AvatarRepository avatarRepository) {
+    public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
-        this.avatarRepository = avatarRepository;
     }
 
     public Student create(Student student) {
@@ -63,15 +58,10 @@ public class StudentService {
 
     public Student patchStudentAvatar(long id, long avatarId) {
         Optional<Student> optionalStudent = studentRepository.findById(id);
-        Optional<Avatar> optionalAvatar = avatarRepository.findById(avatarId);
         if (optionalStudent.isEmpty()) {
             throw new StudentNotFoundException(id);
         }
-        if (optionalAvatar.isEmpty()) {
-            throw new AvatarNotFoundException(avatarId);
-        }
         Student student = optionalStudent.get();;
-        student.setAvatar(optionalAvatar.get());
         return studentRepository.save(student);
     }
 }

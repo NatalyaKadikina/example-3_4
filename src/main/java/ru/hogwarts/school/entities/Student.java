@@ -26,7 +26,6 @@ public class Student {
     }
 
     @OneToOne
-    private Avatar avatar;
 
     public long getId() {
         return id;
@@ -58,14 +57,6 @@ public class Student {
 
     public void setFaculty(Faculty faculty) {
         this.faculty = faculty;
-    }
-
-    public Avatar getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(Avatar avatar) {
-        this.avatar = avatar;
     }
 
 }
